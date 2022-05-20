@@ -1,2 +1,4 @@
-# automata-process-manager
-Automata Process Manager
+# Automata Process Manager
+
+## Packaging
+`python3 -m build`
