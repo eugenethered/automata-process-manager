@@ -8,7 +8,7 @@ class ProcessReporter:
     def __init__(self, repository: ProcessRepository):
         self.repository = repository
 
-    def report(self, process_name, status: ProcessStatus):
+    def report(self, process_name, market, status: ProcessStatus):
         instant = get_utc_timestamp()
-        process = Process(process_name, instant, status)
+        process = Process(market, process_name, instant, status)
         self.repository.store(process)

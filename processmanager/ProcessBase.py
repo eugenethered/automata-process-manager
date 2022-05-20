@@ -6,8 +6,9 @@ from processmanager.reporter.ProcessReporter import ProcessReporter
 
 class ProcessBase:
 
-    def __init__(self, options, process_name):
+    def __init__(self, options, market, process_name):
         self.options = options
+        self.market = market
         self.process_name = process_name
         self.process_state = ProcessStatus.STOPPED
         self.process_reporter = self.__init_process_reporter()
@@ -29,4 +30,4 @@ class ProcessBase:
         self.report_process_status()
 
     def report_process_status(self):
-        self.process_reporter.report(self.process_name, self.process_state)
+        self.process_reporter.report(self.process_name, self.market, self.process_state)
