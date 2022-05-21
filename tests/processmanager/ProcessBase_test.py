@@ -1,6 +1,7 @@
 import unittest
 
 from processrepo.Process import ProcessStatus
+from processrepo.ProcessRunProfile import RunProfile
 
 from processmanager.ProcessBase import ProcessBase
 from processmanager.reporter.ProcessReporter import ProcessReporter
@@ -16,6 +17,9 @@ class ProcessBaseTestCase(unittest.TestCase):
             def init_process_reporter(self):
                 self.process_count = 0
                 return ProcessReporter(process_repository)
+
+            def init_process_run_profile(self):
+                return RunProfile.MINUTE
 
             def process_to_run(self):
                 self.process_count += 1
@@ -38,6 +42,9 @@ class ProcessBaseTestCase(unittest.TestCase):
             def init_process_reporter(self):
                 self.process_count = 0
                 return ProcessReporter(process_repository)
+
+            def init_process_run_profile(self):
+                return RunProfile.MINUTE
 
             def run(self):
                 # (override) hack to never stop the process
@@ -68,6 +75,9 @@ class ProcessBaseTestCase(unittest.TestCase):
                 self.process_count = 0
                 return ProcessReporter(process_repository)
 
+            def init_process_run_profile(self):
+                return RunProfile.MINUTE
+
             def process_to_run(self):
                 raise ValueError('some error')
 
@@ -88,6 +98,9 @@ class ProcessBaseTestCase(unittest.TestCase):
         class ProcessRunner(ProcessBase):
             def init_process_reporter(self):
                 return ProcessReporter(process_repository)
+
+            def init_process_run_profile(self):
+                return RunProfile.MINUTE
 
             def process_to_run(self):
                 raise ValueError('some error')
@@ -110,6 +123,9 @@ class ProcessBaseTestCase(unittest.TestCase):
             def init_process_reporter(self):
                 self.process_count = 0
                 return ProcessReporter(process_repository)
+
+            def init_process_run_profile(self):
+                return RunProfile.MINUTE
 
             def intervene_process(self) -> bool:
                 return 1 == 1 and len('execute') > 0
