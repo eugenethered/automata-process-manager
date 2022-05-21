@@ -1,4 +1,3 @@
-import time
 import unittest
 
 from processrepo.Process import ProcessStatus
@@ -27,9 +26,10 @@ class ProcessBaseTestCase(unittest.TestCase):
         process = process_repository.help_get_current_state()
         self.assertEqual(process.status, ProcessStatus.STOPPED)
         process_history = process_repository.help_get_process_state_history()
-        self.assertEqual(len(process_history), 2)
-        self.assertEqual(process_history[0].status, ProcessStatus.RUNNING)
-        self.assertEqual(process_history[1].status, ProcessStatus.STOPPED)
+        self.assertEqual(len(process_history), 3)
+        self.assertEqual(process_history[0].status, ProcessStatus.INITIALIZED)
+        self.assertEqual(process_history[1].status, ProcessStatus.RUNNING)
+        self.assertEqual(process_history[2].status, ProcessStatus.STOPPED)
 
     def test_process_should_not_run_when_busy_running(self):
         process_repository = ProcessRepositoryHelper()
@@ -41,8 +41,8 @@ class ProcessBaseTestCase(unittest.TestCase):
 
             def run(self):
                 # (override) hack to never stop the process
-                if self.should_run():
-                    self.running()
+                if self.should_run_process():
+                    self.process_running()
                     self.process_to_run()
 
             def process_to_run(self):
@@ -56,8 +56,9 @@ class ProcessBaseTestCase(unittest.TestCase):
         process_to_run.run()
         self.assertEqual(process_to_run.process_count, 1)
         process_history = process_repository.help_get_process_state_history()
-        self.assertEqual(len(process_history), 1)
-        self.assertEqual(process_history[0].status, ProcessStatus.RUNNING)
+        self.assertEqual(len(process_history), 2)
+        self.assertEqual(process_history[0].status, ProcessStatus.INITIALIZED)
+        self.assertEqual(process_history[1].status, ProcessStatus.RUNNING)
 
     def test_process_should_report_status_as_error(self):
         process_repository = ProcessRepositoryHelper()
@@ -76,9 +77,10 @@ class ProcessBaseTestCase(unittest.TestCase):
         process = process_repository.help_get_current_state()
         self.assertEqual(process.status, ProcessStatus.ERROR)
         process_history = process_repository.help_get_process_state_history()
-        self.assertEqual(len(process_history), 2)
-        self.assertEqual(process_history[0].status, ProcessStatus.RUNNING)
-        self.assertEqual(process_history[1].status, ProcessStatus.ERROR)
+        self.assertEqual(len(process_history), 3)
+        self.assertEqual(process_history[0].status, ProcessStatus.INITIALIZED)
+        self.assertEqual(process_history[1].status, ProcessStatus.RUNNING)
+        self.assertEqual(process_history[2].status, ProcessStatus.ERROR)
 
     def test_process_should_not_run_when_process_in_error(self):
         process_repository = ProcessRepositoryHelper()
@@ -96,10 +98,33 @@ class ProcessBaseTestCase(unittest.TestCase):
         self.assertEqual(process.status, ProcessStatus.ERROR, 'confirm process is running')
         process_to_run.run()
         process_history = process_repository.help_get_process_state_history()
-        self.assertEqual(len(process_history), 2)
-        self.assertEqual(process_history[0].status, ProcessStatus.RUNNING)
-        self.assertEqual(process_history[1].status, ProcessStatus.ERROR)
+        self.assertEqual(len(process_history), 3)
+        self.assertEqual(process_history[0].status, ProcessStatus.INITIALIZED)
+        self.assertEqual(process_history[1].status, ProcessStatus.RUNNING)
+        self.assertEqual(process_history[2].status, ProcessStatus.ERROR)
 
+    def test_process_not_run_due_to_custom_pre_process_intervention(self):
+        process_repository = ProcessRepositoryHelper()
+
+        class ProcessRunner(ProcessBase):
+            def init_process_reporter(self):
+                self.process_count = 0
+                return ProcessReporter(process_repository)
+
+            def intervene_process(self) -> bool:
+                return 1 == 1 and len('execute') > 0
+
+            def process_to_run(self):
+                self.process_count += 1
+
+        process_to_run = ProcessRunner(options={}, market='test', process_name='conductor')
+        process_to_run.run()
+
+        process = process_repository.help_get_current_state()
+        self.assertEqual(process.status, ProcessStatus.INITIALIZED)
+        process_history = process_repository.help_get_process_state_history()
+        self.assertEqual(len(process_history), 1)
+        self.assertEqual(process_history[0].status, ProcessStatus.INITIALIZED)
 
 
 if __name__ == '__main__':
