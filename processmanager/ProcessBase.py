@@ -1,13 +1,17 @@
+import logging
+
 from processrepo.Process import ProcessStatus
 from processrepo.repository.ProcessRepository import ProcessRepository
 from processrepo.repository.ProcessRunProfileRepository import ProcessRunProfileRepository
 
+from processmanager.error.ProcessRunProfileMissing import ProcessRunProfileMissing
 from processmanager.reporter.ProcessReporter import ProcessReporter
 
 
 class ProcessBase:
 
     def __init__(self, options, market, process_name):
+        self.log = logging.getLogger(__name__)
         self.options = options
         self.market = market
         self.process_name = process_name
@@ -23,7 +27,10 @@ class ProcessBase:
     def init_process_run_profile(self):
         process_run_profile_repository = ProcessRunProfileRepository(self.options)
         process_run_profile = process_run_profile_repository.retrieve(self.process_name, self.market)
-        # todo: throw exception when not found
+        if process_run_profile is None:
+            self.process_error()
+            self.log.warning(f'Run profile missing for market:{self.market} process name:{self.process_name}')
+            raise ProcessRunProfileMissing(f'Run profile missing for market:{self.market} process name:{self.process_name}')
         return process_run_profile.run_profile
 
     def process_running(self):
