@@ -4,6 +4,7 @@ import schedule
 from processrepo.ProcessRunProfile import RunProfile
 
 from processmanager.ProcessBase import ProcessBase
+from processmanager.termination.GracefulTermination import GracefulTermination
 
 
 class ScheduledProcess(ProcessBase):
@@ -23,8 +24,14 @@ class ScheduledProcess(ProcessBase):
         else:
             schedule.every(1).second.do(self.run)
 
-    @staticmethod
-    def start_process_schedule():
-        while True:
+    def start_process_schedule(self):
+        self.log.info(f'START Scheduling {self.market} - {self.process_name}')
+        termination = GracefulTermination()
+        while not termination.kill_now:
             schedule.run_pending()
             sleep(1)
+        self.stop_process_schedule()
+
+    def stop_process_schedule(self):
+        self.log.info(f'STOP Scheduling {self.market} - {self.process_name}')
+        self.process_stopped()
