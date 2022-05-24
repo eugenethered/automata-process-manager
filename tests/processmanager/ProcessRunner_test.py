@@ -3,17 +3,17 @@ import unittest
 from processrepo.Process import ProcessStatus
 from processrepo.ProcessRunProfile import RunProfile
 
-from processmanager.ProcessBase import ProcessBase
+from processmanager.ProcessRunner import ProcessRunner
 from processmanager.reporter.ProcessReporter import ProcessReporter
 from tests.helper.ProcessRepositoryHelper import ProcessRepositoryHelper
 
 
-class ProcessBaseTestCase(unittest.TestCase):
+class ProcessRunnerTestCase(unittest.TestCase):
 
     def test_process_should_report_status_to_completion(self):
         process_repository = ProcessRepositoryHelper()
 
-        class ProcessRunner(ProcessBase):
+        class TestProcessRunner(ProcessRunner):
             def init_process_reporter(self):
                 self.process_count = 0
                 return ProcessReporter(process_repository)
@@ -24,7 +24,7 @@ class ProcessBaseTestCase(unittest.TestCase):
             def process_to_run(self):
                 self.process_count += 1
 
-        process_to_run = ProcessRunner(options={}, market='test', process_name='conductor')
+        process_to_run = TestProcessRunner(options={}, market='test', process_name='conductor')
         process_to_run.run()
 
         process = process_repository.help_get_current_state()
@@ -38,7 +38,7 @@ class ProcessBaseTestCase(unittest.TestCase):
     def test_process_should_not_run_when_busy_running(self):
         process_repository = ProcessRepositoryHelper()
 
-        class ProcessRunner(ProcessBase):
+        class TestProcessRunner(ProcessRunner):
             def init_process_reporter(self):
                 self.process_count = 0
                 return ProcessReporter(process_repository)
@@ -55,7 +55,7 @@ class ProcessBaseTestCase(unittest.TestCase):
             def process_to_run(self):
                 self.process_count += 1
 
-        process_to_run = ProcessRunner(options={}, market='test', process_name='conductor')
+        process_to_run = TestProcessRunner(options={}, market='test', process_name='conductor')
         process_to_run.run()
         process = process_repository.help_get_current_state()
         self.assertEqual(process.status, ProcessStatus.RUNNING, 'confirm process is running')
@@ -70,7 +70,7 @@ class ProcessBaseTestCase(unittest.TestCase):
     def test_process_should_report_status_as_error(self):
         process_repository = ProcessRepositoryHelper()
 
-        class ProcessRunner(ProcessBase):
+        class TestProcessRunner(ProcessRunner):
             def init_process_reporter(self):
                 self.process_count = 0
                 return ProcessReporter(process_repository)
@@ -81,7 +81,7 @@ class ProcessBaseTestCase(unittest.TestCase):
             def process_to_run(self):
                 raise ValueError('some error')
 
-        process_to_run = ProcessRunner(options={}, market='test', process_name='conductor')
+        process_to_run = TestProcessRunner(options={}, market='test', process_name='conductor')
         process_to_run.run()
 
         process = process_repository.help_get_current_state()
@@ -95,7 +95,7 @@ class ProcessBaseTestCase(unittest.TestCase):
     def test_process_should_not_run_when_process_in_error(self):
         process_repository = ProcessRepositoryHelper()
 
-        class ProcessRunner(ProcessBase):
+        class TestProcessRunner(ProcessRunner):
             def init_process_reporter(self):
                 return ProcessReporter(process_repository)
 
@@ -105,7 +105,7 @@ class ProcessBaseTestCase(unittest.TestCase):
             def process_to_run(self):
                 raise ValueError('some error')
 
-        process_to_run = ProcessRunner(options={}, market='test', process_name='conductor')
+        process_to_run = TestProcessRunner(options={}, market='test', process_name='conductor')
         process_to_run.run()
         process = process_repository.help_get_current_state()
         self.assertEqual(process.status, ProcessStatus.ERROR, 'confirm process is running')
@@ -119,7 +119,7 @@ class ProcessBaseTestCase(unittest.TestCase):
     def test_process_not_run_due_to_custom_pre_process_intervention(self):
         process_repository = ProcessRepositoryHelper()
 
-        class ProcessRunner(ProcessBase):
+        class TestProcessRunner(ProcessRunner):
             def init_process_reporter(self):
                 self.process_count = 0
                 return ProcessReporter(process_repository)
@@ -133,7 +133,7 @@ class ProcessBaseTestCase(unittest.TestCase):
             def process_to_run(self):
                 self.process_count += 1
 
-        process_to_run = ProcessRunner(options={}, market='test', process_name='conductor')
+        process_to_run = TestProcessRunner(options={}, market='test', process_name='conductor')
         process_to_run.run()
 
         process = process_repository.help_get_current_state()

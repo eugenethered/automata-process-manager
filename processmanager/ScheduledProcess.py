@@ -3,11 +3,11 @@ from time import sleep
 import schedule
 from processrepo.ProcessRunProfile import RunProfile
 
-from processmanager.ProcessBase import ProcessBase
+from processmanager.ProcessRunner import ProcessRunner
 from processmanager.termination.GracefulTermination import GracefulTermination
 
 
-class ScheduledProcess(ProcessBase):
+class ScheduledProcess(ProcessRunner):
 
     def __init__(self, options, market, process_name):
         super().__init__(options, market, process_name)
