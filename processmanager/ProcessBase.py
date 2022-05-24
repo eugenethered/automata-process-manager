@@ -1,4 +1,6 @@
 import logging
+import sys
+import traceback
 
 from processrepo.Process import ProcessStatus
 from processrepo.repository.ProcessRepository import ProcessRepository
@@ -61,9 +63,11 @@ class ProcessBase:
                 self.process_running()
                 self.process_to_run()
                 self.process_stopped()
-            except Exception as error:
-                self.log.warning(f'Process has an error:[{type(error)}] "{error}"')
+            except Exception as err:
+                exc_info = sys.exc_info()
+                self.log.warning(f'Process has an error:[{type(err)}] "{err}"')
                 self.process_error()
+                traceback.print_exception(*exc_info)
 
     # override, by defining the process to run
     def process_to_run(self):
