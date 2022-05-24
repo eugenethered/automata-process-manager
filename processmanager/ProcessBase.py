@@ -61,7 +61,8 @@ class ProcessBase:
                 self.process_running()
                 self.process_to_run()
                 self.process_stopped()
-            except Exception:
+            except Exception as error:
+                self.log.warning(f'Process has an error: "{error}"')
                 self.process_error()
 
     # override, by defining the process to run
