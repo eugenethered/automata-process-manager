@@ -37,6 +37,10 @@ class ProcessBase:
         self.process_state = ProcessStatus.RUNNING
         self.report_process_status()
 
+    def process_idling(self):
+        self.process_state = ProcessStatus.IDLE
+        self.report_process_status()
+
     def process_error(self):
         self.process_state = ProcessStatus.ERROR
         self.report_process_status()

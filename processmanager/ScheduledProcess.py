@@ -25,7 +25,7 @@ class ScheduledProcess(ProcessRunner):
             schedule.every(1).second.do(self.run)
 
     def start_process_schedule(self):
-        self.log.info(f'START Scheduling {self.market} - {self.process_name}')
+        self.log.info(f'START Scheduling market:[{self.market}] process:[{self.process_name}]')
         termination = GracefulTermination()
         while not termination.kill_now:
             schedule.run_pending()
@@ -33,5 +33,5 @@ class ScheduledProcess(ProcessRunner):
         self.stop_process_schedule()
 
     def stop_process_schedule(self):
-        self.log.info(f'STOP Scheduling {self.market} - {self.process_name}')
+        self.log.info(f'STOP Scheduling market:[{self.market}] process:[{self.process_name}]')
         self.process_stopped()

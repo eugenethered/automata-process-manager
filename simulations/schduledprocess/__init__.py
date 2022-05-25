@@ -1,3 +1,5 @@
+import logging
+
 from cache.holder.RedisCacheHolder import RedisCacheHolder
 
 from simulations.schduledprocess.SimulatedScheduledProcess import SimulatedScheduledProcess
@@ -10,6 +12,8 @@ if __name__ == '__main__':
         'PROCESS_KEY': '{}:process:status:{}',
         'PROCESS_RUN_PROFILE_KEY': '{}:process:run-profile:{}'
     }
+
+    logging.basicConfig(level=logging.DEBUG)
 
     RedisCacheHolder(options)
 

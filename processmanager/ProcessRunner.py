@@ -23,7 +23,7 @@ class ProcessRunner(ProcessBase):
             try:
                 self.process_running()
                 self.process_to_run()
-                self.process_stopped()
+                self.process_idling()
             except Exception as err:
                 exc_info = sys.exc_info()
                 self.log.warning(f'Process has an error:[{type(err)}] "{err}"')
