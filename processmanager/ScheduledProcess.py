@@ -20,7 +20,7 @@ class ScheduledProcess(ProcessRunner):
         elif self.process_run_profile == RunProfile.HOUR:
             schedule.every().hour.do(self.run)
         elif self.process_run_profile == RunProfile.DAY:
-            schedule.every().day.at('07:00').do(self.run)
+            schedule.every().day.at('06:00').do(self.run)
         else:
             schedule.every(1).second.do(self.run)
 
