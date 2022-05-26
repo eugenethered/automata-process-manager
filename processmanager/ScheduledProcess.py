@@ -29,6 +29,7 @@ class ScheduledProcess(ProcessRunner):
         termination = GracefulTermination()
         while not termination.kill_now:
             schedule.run_pending()
+            # todo: increase efficiency -> 100 milliseconds
             sleep(1)
         self.stop_process_schedule()
 

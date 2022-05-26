@@ -28,12 +28,12 @@ class ProcessRunnerTestCase(unittest.TestCase):
         process_to_run.run()
 
         process = process_repository.help_get_current_state()
-        self.assertEqual(process.status, ProcessStatus.STOPPED)
+        self.assertEqual(process.status, ProcessStatus.IDLE)
         process_history = process_repository.help_get_process_state_history()
         self.assertEqual(len(process_history), 3)
         self.assertEqual(process_history[0].status, ProcessStatus.INITIALIZED)
         self.assertEqual(process_history[1].status, ProcessStatus.RUNNING)
-        self.assertEqual(process_history[2].status, ProcessStatus.STOPPED)
+        self.assertEqual(process_history[2].status, ProcessStatus.IDLE)
 
     def test_process_should_not_run_when_busy_running(self):
         process_repository = ProcessRepositoryHelper()
