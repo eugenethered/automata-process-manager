@@ -12,8 +12,8 @@ class ProcessReporter:
         self.log = logging.getLogger(__name__)
         self.repository = repository
 
-    def report(self, process_name, market, run_profile: RunProfile, status: ProcessStatus):
+    def report(self, process_name, process_version, market, run_profile: RunProfile, status: ProcessStatus):
         instant = get_utc_timestamp()
-        process = Process(market, process_name, instant, run_profile, status)
+        process = Process(market, process_name, process_version, instant, run_profile, status)
         self.log.debug(f'Reporting process:[{process}]')
         self.repository.store(process)

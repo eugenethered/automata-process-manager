@@ -24,7 +24,7 @@ class ProcessRunnerTestCase(unittest.TestCase):
             def process_to_run(self):
                 self.process_count += 1
 
-        process_to_run = TestProcessRunner(options={}, market='test', process_name='conductor')
+        process_to_run = TestProcessRunner(options={'VERSION':'0.0.1'}, market='test', process_name='conductor')
         process_to_run.run()
 
         process = process_repository.help_get_current_state()
@@ -55,7 +55,7 @@ class ProcessRunnerTestCase(unittest.TestCase):
             def process_to_run(self):
                 self.process_count += 1
 
-        process_to_run = TestProcessRunner(options={}, market='test', process_name='conductor')
+        process_to_run = TestProcessRunner(options={'VERSION':'0.0.1'}, market='test', process_name='conductor')
         process_to_run.run()
         process = process_repository.help_get_current_state()
         self.assertEqual(process.status, ProcessStatus.RUNNING, 'confirm process is running')
@@ -81,7 +81,7 @@ class ProcessRunnerTestCase(unittest.TestCase):
             def process_to_run(self):
                 raise ValueError('some error')
 
-        process_to_run = TestProcessRunner(options={}, market='test', process_name='conductor')
+        process_to_run = TestProcessRunner(options={'VERSION':'0.0.1'}, market='test', process_name='conductor')
         process_to_run.run()
 
         process = process_repository.help_get_current_state()
@@ -105,7 +105,7 @@ class ProcessRunnerTestCase(unittest.TestCase):
             def process_to_run(self):
                 raise ValueError('some error')
 
-        process_to_run = TestProcessRunner(options={}, market='test', process_name='conductor')
+        process_to_run = TestProcessRunner(options={'VERSION':'0.0.1'}, market='test', process_name='conductor')
         process_to_run.run()
         process = process_repository.help_get_current_state()
         self.assertEqual(process.status, ProcessStatus.ERROR, 'confirm process is running')
@@ -133,7 +133,7 @@ class ProcessRunnerTestCase(unittest.TestCase):
             def process_to_run(self):
                 self.process_count += 1
 
-        process_to_run = TestProcessRunner(options={}, market='test', process_name='conductor')
+        process_to_run = TestProcessRunner(options={'VERSION':'0.0.1'}, market='test', process_name='conductor')
         process_to_run.run()
 
         process = process_repository.help_get_current_state()

@@ -15,6 +15,7 @@ class ProcessBase:
         self.options = options
         self.market = market
         self.process_name = process_name
+        self.process_version = options['VERSION']
         self.process_state = ProcessStatus.INITIALIZED
         self.process_reporter = self.init_process_reporter()
         self.process_run_profile = self.init_process_run_profile()
@@ -50,4 +51,4 @@ class ProcessBase:
         self.report_process_status()
 
     def report_process_status(self):
-        self.process_reporter.report(self.process_name, self.market, self.process_run_profile, self.process_state)
+        self.process_reporter.report(self.process_name, self.process_version, self.market, self.process_run_profile, self.process_state)

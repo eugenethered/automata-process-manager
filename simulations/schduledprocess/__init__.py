@@ -10,7 +10,8 @@ if __name__ == '__main__':
         'REDIS_SERVER_ADDRESS': '192.168.1.90',
         'REDIS_SERVER_PORT': 6379,
         'PROCESS_KEY': '{}:process:status:{}',
-        'PROCESS_RUN_PROFILE_KEY': '{}:process:run-profile:{}'
+        'PROCESS_RUN_PROFILE_KEY': '{}:process:run-profile:{}',
+        'VERSION': '0.0.1'
     }
 
     logging.basicConfig(level=logging.DEBUG)

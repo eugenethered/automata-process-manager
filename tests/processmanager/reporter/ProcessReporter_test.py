@@ -14,7 +14,7 @@ class ProcessReporterTestCase(unittest.TestCase):
         self.process_reporter = ProcessReporter(self.repository)
 
     def test_should_report_process(self):
-        self.process_reporter.report('conductor', 'test', RunProfile.MINUTE, ProcessStatus.RUNNING)
+        self.process_reporter.report('conductor', '0.0.1', 'test', RunProfile.MINUTE, ProcessStatus.RUNNING)
         process_state_history = self.repository.help_get_process_state_history()
         self.assertEqual(len(process_state_history), 1)
 
