@@ -18,6 +18,7 @@ class ProcessBase:
         self.process_version = options['VERSION']
         self.process_state = ProcessStatus.INITIALIZED
         self.process_reporter = self.init_process_reporter()
+        self.process_run_profile_repository = ProcessRunProfileRepository(self.options)
         self.process_run_profile = self.init_process_run_profile()
         self.report_process_status()
 
@@ -26,13 +27,22 @@ class ProcessBase:
         return ProcessReporter(process_repository)
 
     def init_process_run_profile(self):
-        process_run_profile_repository = ProcessRunProfileRepository(self.options)
-        process_run_profile = process_run_profile_repository.retrieve(self.process_name, self.market)
+        process_run_profile = self.process_run_profile_repository.retrieve(self.process_name, self.market)
         if process_run_profile is None:
             self.process_error()
             self.log.warning(f'Run profile missing for market:{self.market} process name:{self.process_name}')
             raise ProcessRunProfileMissing(f'Run profile missing for market:{self.market} process name:{self.process_name}')
         return process_run_profile.run_profile
+
+    def is_process_enabled(self):
+        process_run_profile = self.process_run_profile_repository.retrieve(self.process_name, self.market)
+        if process_run_profile.enabled is False:
+            self.process_disabled()
+        return process_run_profile.enabled
+
+    def process_disabled(self):
+        self.process_state = ProcessStatus.DISABLED
+        self.report_process_status()
 
     def process_running(self):
         self.process_state = ProcessStatus.RUNNING

@@ -12,6 +12,8 @@ class ProcessRunner(ProcessBase):
         super().__init__(options, market, process_name)
 
     def should_run_process(self) -> bool:
+        if self.is_process_enabled() is False:
+            return False
         if self.intervene_process() is True:
             return False
         if self.process_state in [ProcessStatus.RUNNING, ProcessStatus.ERROR]:
